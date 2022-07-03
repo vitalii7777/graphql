@@ -1,5 +1,5 @@
 const usersDB = require('./MockDB');
-
+const User = require('./models/User');
 
 const createUser = (input) => {
     const id = Date.now();
@@ -7,8 +7,12 @@ const createUser = (input) => {
 };
 
 const root = {
-    getAllUsers: () => {
-        return usersDB;
+    getAllUsers: async () => {
+        const user =  await User.find({});
+        const candidate = await User.findOne({ email:"asd@mail.com" });
+        console.log(user)
+        console.log(candidate)
+        return user
     },
     getUser: ({ id }) => {
         return usersDB.find(user => user.id == id)

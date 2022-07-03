@@ -3,9 +3,8 @@ const { buildSchema } = require('graphql');
 const schema = buildSchema(`
     type User {
         id: ID
-        username: String    
-        age: Int
-        posts: [Post]
+        email: String    
+        password: String
     }
     type Post {
         id: ID
