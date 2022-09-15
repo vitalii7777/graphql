@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ALL_USERS, GET_ONE_USER } from './query/user';
+import { GET_ALL_USERS, GET_USER_NAME } from './query/user';
 import { CREATE_USER } from './mutations/user';
 
 const App = () => {
   const { data, loading, error, refetch } = useQuery(GET_ALL_USERS);
-  const { data: oneUser, loading: loadingOneUser } = useQuery(GET_ONE_USER, {
+  const { data: oneUser, loading: loadingOneUser } = useQuery(GET_USER_NAME, {
     variables: {
-      id: 1
+      name: '1'
     },
   });
   const [newUser] = useMutation(CREATE_USER);
 
   const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState('');
+  const [name, setUsername] = useState('');
   const [age, setAge] = useState(0);
 
     if (!loadingOneUser) {
@@ -33,7 +33,7 @@ const App = () => {
     const resp = await newUser({
       variables: {
         input: {
-          username,
+          name,
           age,
         },
       },
@@ -55,24 +55,24 @@ const App = () => {
     <div>
       <form>
         <input
-          value={username}
+          value={name}
           onChange={(e) => setUsername(e.target.value)}
           type="text"
         />
         <input
           value={age}
-          onChange={(e) => setAge(e.target.value)}
+          onChange={(e) => setAge(parseInt(e.target.value))}
           type="number"
         />
         <div className="btns">
           <button onClick={(e) => addUser(e)}>Create</button>
-          <button onClick={(e) => getAll(e)}>Get</button>
+          <button onClick={(e) => getAll(e)}>Get All</button>
         </div>
       </form>
       <div>
         {users.map((user) => (
           <div>
-            {user.id} {user.username} {user.age}
+            {user.name} {user.age}
           </div>
         ))}
       </div>

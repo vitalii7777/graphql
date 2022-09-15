@@ -1,25 +1,28 @@
 const usersDB = require('./MockDB');
 const User = require('./models/User');
 
+const { ObjectID }  = require('mongodb');
+
+const mongoAlwaysNewObjectId = () => new ObjectID().toHexString();
+
 const createUser = (input) => {
-    const id = Date.now();
-    return { id, ...input }
+    const _id = mongoAlwaysNewObjectId();
+    return { _id, createdAt: new Date().toString(), ...input }
 };
 
 const root = {
     getAllUsers: async () => {
         const user =  await User.find({});
-        const candidate = await User.findOne({ email:"asd@mail.com" });
-        console.log(user)
-        console.log(candidate)
+        console.log(user);
         return user
     },
-    getUser: ({ id }) => {
-        return usersDB.find(user => user.id == id)
+    getUserName: ({ name }) => {
+        return User.find({name})
     },
-    createUser: ({ input }) => {
-        const user = createUser(input);
-        usersDB.push(user);
+    createUser: async ({ input }) => {
+        const userData = createUser(input);
+        const user = new User(userData);
+        await user.save();
         return user;
     },
 };
